@@ -1,0 +1,40 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data
+trusttrain-data/
+*.db
+*.sqlite
+
+# Generated attack-lab datasets (reproduce with scripts/generate_attack_lab.py)
+datasets/synthetic/*.csv
+datasets/synthetic/*.jsonl
+datasets/synthetic/ground_truth.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
