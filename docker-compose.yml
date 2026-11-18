@@ -1,0 +1,58 @@
+# Local deployment: PostgreSQL + API + dashboard.
+#   cp .env.example .env   # then set real secrets
+#   docker compose up --build
+# Dashboard: http://localhost:8080   API docs: http://localhost:8000/docs
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: trusttrain
+      POSTGRES_USER: trusttrain
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trusttrain -d trusttrain"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    env_file: .env
+    environment:
+      TRUSTTRAIN_DATABASE_URL: postgresql+psycopg://trusttrain:${POSTGRES_PASSWORD}@db:5432/trusttrain
+      TRUSTTRAIN_SIGNING_KEY_PATH: /data/signing-key.pem
+      # Trust X-Forwarded-For only from the nginx container, so rate limits apply per real client.
+      FORWARDED_ALLOW_IPS: 172.28.0.10
+    volumes:
+      - trusttrain-data:/data
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      default:
+        ipv4_address: 172.28.0.10
+    depends_on:
+      - backend
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+volumes:
+  pgdata:
+  trusttrain-data:
