@@ -1,0 +1,14 @@
+{
+  "api_url": "https://trusttrain.example.internal",
+  "manifests_dir": ".trusttrain/manifests",
+  "datasets": [
+    "data/train.csv",
+    "data/eval.jsonl"
+  ],
+  "policy": {
+    "fail_on_integrity_mismatch": true,
+    "fail_on_missing_manifest": true,
+    "fail_on_risk": "high",
+    "inspect_via_api": false
+  }
+}
