@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies (CPU-only PyTorch)
+        run: |
+          pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0
+          pip install -r backend/requirements-dev.txt
+          pip install ./sdk
+      - name: Lint and type-check
+        working-directory: backend
+        run: |
+          ruff check .
+          ruff format --check .
+          mypy app
+      - name: Security scans
+        working-directory: backend
+        run: |
+          bandit -q -r app -c pyproject.toml
+          pip-audit -r requirements.txt
+      - name: Compile
+        run: python -m compileall -q backend/app sdk/trusttrain scripts
+      - name: Tests
+        working-directory: backend
+        run: pytest --cov=app --cov-report=term-missing
+      - name: Migrations are in sync with models
+        working-directory: backend
+        env:
+          TRUSTTRAIN_DATABASE_URL: sqlite:////tmp/ci-migrations.db
+        run: |
+          alembic upgrade head
+          alembic check
+
+  sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - working-directory: sdk
+        run: |
+          pip install -e ".[dev]"
+          ruff check .
+          mypy trusttrain
+          pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - working-directory: frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint
+          npm test
+          npm run build
+          npm audit --omit=dev --audit-level=high
