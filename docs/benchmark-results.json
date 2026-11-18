@@ -1,0 +1,399 @@
+{
+  "seed": 2024,
+  "datasets": {
+    "sentiment": {
+      "rows": 1282,
+      "poisoned_rows": 126,
+      "risk_level": "critical",
+      "clean_dataset_risk_level": "low",
+      "combined_engine_all_findings": {
+        "flagged": 184,
+        "tp": 117,
+        "fp": 67,
+        "fn": 9,
+        "precision": 0.6359,
+        "recall": 0.9286,
+        "f1": 0.7548,
+        "false_positive_rate": 0.058
+      },
+      "combined_engine_actionable": {
+        "flagged": 127,
+        "tp": 109,
+        "fp": 18,
+        "fn": 17,
+        "precision": 0.8583,
+        "recall": 0.8651,
+        "f1": 0.8617,
+        "false_positive_rate": 0.0156
+      },
+      "clean_dataset_actionable_rows": 0,
+      "per_detector": {
+        "statistical_anomaly": {
+          "status": "ran",
+          "duration_ms": 0,
+          "vs_all_poisoned_rows": {
+            "flagged": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 118,
+            "precision": 1.0,
+            "recall": 0.0635,
+            "f1": 0.1194,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 1.0,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "duplicate_detection": {
+          "status": "ran",
+          "duration_ms": 214,
+          "vs_all_poisoned_rows": {
+            "flagged": 98,
+            "tp": 31,
+            "fp": 67,
+            "fn": 95,
+            "precision": 0.3163,
+            "recall": 0.246,
+            "f1": 0.2768,
+            "false_positive_rate": 0.058
+          },
+          "recall_on_targeted_attack": 1.0,
+          "rows_flagged_on_clean_dataset": 60,
+          "clean_dataset_flag_rate": 0.05
+        },
+        "label_inconsistency": {
+          "status": "ran",
+          "duration_ms": 130,
+          "vs_all_poisoned_rows": {
+            "flagged": 39,
+            "tp": 39,
+            "fp": 0,
+            "fn": 87,
+            "precision": 1.0,
+            "recall": 0.3095,
+            "f1": 0.4727,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 0.75,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "embedding_outlier": {
+          "status": "ran",
+          "duration_ms": 101,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 126,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "suspicious_instruction_pattern": {
+          "status": "ran",
+          "duration_ms": 17,
+          "vs_all_poisoned_rows": {
+            "flagged": 18,
+            "tp": 18,
+            "fp": 0,
+            "fn": 108,
+            "precision": 1.0,
+            "recall": 0.1429,
+            "f1": 0.25,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 1.0,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "trigger_token_association": {
+          "status": "ran",
+          "duration_ms": 141,
+          "vs_all_poisoned_rows": {
+            "flagged": 40,
+            "tp": 40,
+            "fp": 0,
+            "fn": 86,
+            "precision": 1.0,
+            "recall": 0.3175,
+            "f1": 0.4819,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 1.0,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "semantic_inconsistency": {
+          "status": "skipped",
+          "duration_ms": 0,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 126,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "distribution_shift": {
+          "status": "ran",
+          "duration_ms": 15,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 126,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        }
+      },
+      "per_attack": {
+        "label_flip": {
+          "rows": 36,
+          "expected_detector": "label_inconsistency",
+          "detected_by_engine": 0.75
+        },
+        "rating_outlier": {
+          "rows": 8,
+          "expected_detector": "statistical_anomaly",
+          "detected_by_engine": 1.0
+        },
+        "trigger_backdoor": {
+          "rows": 40,
+          "expected_detector": "trigger_token_association",
+          "detected_by_engine": 1.0
+        },
+        "conflicting_duplicates": {
+          "rows": 24,
+          "expected_detector": "duplicate_detection",
+          "detected_by_engine": 1.0
+        },
+        "suspicious_instruction": {
+          "rows": 18,
+          "expected_detector": "suspicious_instruction_pattern",
+          "detected_by_engine": 1.0
+        },
+        "distribution_shift": {
+          "rows": 0,
+          "expected_detector": "distribution_shift",
+          "detected_by_engine": null
+        }
+      },
+      "processing_seconds": 0.625,
+      "clean_processing_seconds": 0.34,
+      "distribution_shift_findings": [
+        "Vocabulary drift vs reference (JSD=0.054, 4 emerging tokens)"
+      ]
+    },
+    "instruct": {
+      "rows": 600,
+      "poisoned_rows": 45,
+      "risk_level": "critical",
+      "clean_dataset_risk_level": "low",
+      "combined_engine_all_findings": {
+        "flagged": 150,
+        "tp": 44,
+        "fp": 106,
+        "fn": 1,
+        "precision": 0.2933,
+        "recall": 0.9778,
+        "f1": 0.4513,
+        "false_positive_rate": 0.191
+      },
+      "combined_engine_actionable": {
+        "flagged": 44,
+        "tp": 44,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.9778,
+        "f1": 0.9888,
+        "false_positive_rate": 0.0
+      },
+      "clean_dataset_actionable_rows": 0,
+      "per_detector": {
+        "statistical_anomaly": {
+          "status": "ran",
+          "duration_ms": 0,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 45,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "duplicate_detection": {
+          "status": "ran",
+          "duration_ms": 59,
+          "vs_all_poisoned_rows": {
+            "flagged": 105,
+            "tp": 2,
+            "fp": 103,
+            "fn": 43,
+            "precision": 0.019,
+            "recall": 0.0444,
+            "f1": 0.0267,
+            "false_positive_rate": 0.1856
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 111,
+          "clean_dataset_flag_rate": 0.185
+        },
+        "label_inconsistency": {
+          "status": "skipped",
+          "duration_ms": 0,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 45,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "embedding_outlier": {
+          "status": "ran",
+          "duration_ms": 109,
+          "vs_all_poisoned_rows": {
+            "flagged": 37,
+            "tp": 5,
+            "fp": 32,
+            "fn": 40,
+            "precision": 0.1351,
+            "recall": 0.1111,
+            "f1": 0.122,
+            "false_positive_rate": 0.0577
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 34,
+          "clean_dataset_flag_rate": 0.0567
+        },
+        "suspicious_instruction_pattern": {
+          "status": "ran",
+          "duration_ms": 8,
+          "vs_all_poisoned_rows": {
+            "flagged": 10,
+            "tp": 10,
+            "fp": 0,
+            "fn": 35,
+            "precision": 1.0,
+            "recall": 0.2222,
+            "f1": 0.3636,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 1.0,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "trigger_token_association": {
+          "status": "skipped",
+          "duration_ms": 0,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 45,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "semantic_inconsistency": {
+          "status": "ran",
+          "duration_ms": 81,
+          "vs_all_poisoned_rows": {
+            "flagged": 34,
+            "tp": 34,
+            "fp": 0,
+            "fn": 11,
+            "precision": 1.0,
+            "recall": 0.7556,
+            "f1": 0.8608,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": 0.9714,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        },
+        "distribution_shift": {
+          "status": "ran",
+          "duration_ms": 10,
+          "vs_all_poisoned_rows": {
+            "flagged": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 45,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_rate": 0.0
+          },
+          "recall_on_targeted_attack": null,
+          "rows_flagged_on_clean_dataset": 0,
+          "clean_dataset_flag_rate": 0.0
+        }
+      },
+      "per_attack": {
+        "unrelated_response": {
+          "rows": 20,
+          "expected_detector": "semantic_inconsistency",
+          "detected_by_engine": 0.95
+        },
+        "forced_response": {
+          "rows": 15,
+          "expected_detector": "semantic_inconsistency",
+          "detected_by_engine": 1.0
+        },
+        "hidden_injection": {
+          "rows": 10,
+          "expected_detector": "suspicious_instruction_pattern",
+          "detected_by_engine": 1.0
+        }
+      },
+      "processing_seconds": 0.275,
+      "clean_processing_seconds": 0.193,
+      "distribution_shift_findings": [
+        "Vocabulary drift vs reference (JSD=0.118, 21 emerging tokens)"
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.13.18",
+    "machine": "x86_64",
+    "system": "Linux"
+  }
+}
