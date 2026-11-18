@@ -1,0 +1,26 @@
+# Example caller workflow for another repository.
+# Copy to .github/workflows/dataset-check.yml in the repository that holds your
+# training data, and commit .trusttrain/config.json (see trusttrain-config.json)
+# together with manifests created by `trusttrain fingerprint <dataset>`.
+name: Training data checks
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - ".trusttrain/**"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  datasets:
+    uses: kirtanbhatt10/trusttrain/.github/workflows/trusttrain-dataset-check.yml@main
+    with:
+      config: .trusttrain/config.json
+      # api-url is only used when policy.inspect_via_api is true.
+      api-url: ""
+    secrets:
+      TRUSTTRAIN_TOKEN: ${{ secrets.TRUSTTRAIN_TOKEN }}
