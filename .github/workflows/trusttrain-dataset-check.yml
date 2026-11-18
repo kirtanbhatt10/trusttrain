@@ -1,0 +1,88 @@
+# Reusable workflow: verify training datasets against committed TrustTrain
+# manifests and (optionally) inspect them on a TrustTrain server.
+#
+# Usage from another repository:
+#   jobs:
+#     datasets:
+#       uses: <owner>/trusttrain/.github/workflows/trusttrain-dataset-check.yml@main
+#       with:
+#         config: .trusttrain/config.json
+#       secrets:
+#         TRUSTTRAIN_TOKEN: ${{ secrets.TRUSTTRAIN_TOKEN }}
+#
+# Enforcement is controlled by the "policy" block of the config file:
+#   fail_on_integrity_mismatch, fail_on_missing_manifest, fail_on_risk, inspect_via_api
+name: TrustTrain dataset check
+
+on:
+  workflow_call:
+    inputs:
+      config:
+        description: Path to the TrustTrain config file
+        type: string
+        default: .trusttrain/config.json
+      api-url:
+        description: TrustTrain API URL (only used when policy.inspect_via_api is true)
+        type: string
+        default: ""
+      trusttrain-repo:
+        description: GitHub repository that provides the TrustTrain SDK
+        type: string
+        default: kirtanbhatt10/trusttrain
+      trusttrain-ref:
+        description: Git ref of the TrustTrain SDK to install
+        type: string
+        default: main
+      report-path:
+        description: Where to write the machine-readable report
+        type: string
+        default: trusttrain-report.json
+    secrets:
+      TRUSTTRAIN_TOKEN:
+        required: false
+    outputs:
+      passed:
+        description: "'true' when no policy violations were found"
+        value: ${{ jobs.check.outputs.passed }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.run.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install TrustTrain SDK
+        env:
+          TRUSTTRAIN_REPO: ${{ inputs.trusttrain-repo }}
+          TRUSTTRAIN_REF: ${{ inputs.trusttrain-ref }}
+        run: pip install "trusttrain @ git+https://github.com/${TRUSTTRAIN_REPO}@${TRUSTTRAIN_REF}#subdirectory=sdk"
+      - name: Run checks
+        id: run
+        env:
+          # Secrets are passed via environment only and never echoed.
+          TRUSTTRAIN_TOKEN: ${{ secrets.TRUSTTRAIN_TOKEN }}
+          TRUSTTRAIN_API_URL: ${{ inputs.api-url }}
+          CONFIG: ${{ inputs.config }}
+          REPORT: ${{ inputs.report-path }}
+        run: |
+          set +e
+          if [ -z "$TRUSTTRAIN_API_URL" ]; then unset TRUSTTRAIN_API_URL; fi
+          trusttrain ci --config "$CONFIG" --output "$REPORT"
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then echo "passed=true" >> "$GITHUB_OUTPUT"; else echo "passed=false" >> "$GITHUB_OUTPUT"; fi
+          exit "$status"
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trusttrain-report
+          path: ${{ inputs.report-path }}
+          if-no-files-found: ignore
